@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PC Devices Shopping Cart</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            font-size: 28px; 
+        }
+
+        #cart {
+            max-width: 800px;/* Adjust the maximum width of the cart */
+            margin: 0 auto;
+            border: 1px solid #ccc;
+            padding: 20px;
+            
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;/* Adjust the margin between cart items */
+            padding: 10px;
+            border: 1px solid #ddd;
+            
+        }
+
+        .item-image {
+            max-width: 150px;/* Adjust the maximum width of the images */
+            max-height: 150px;
+            margin-right: 80px;
+        }
+        
+        .quantity-btn,
+    .heart-icon,
+    button {
+      margin-left: 10px;/* Adjust the margin between buttons and other elements */
+      margin-right: 10px; /* Adjust the margin between buttons and other elements */
+    }
+    
+    
+    .heart-icon {
+      cursor: pointer;
+      color: black; /* Set the initial color to black */
+      font-size: 24px; /* Set the font size for the heart icon */
+    }
+
+    .heart-icon.active {
+      color: red; /* Set the color of the icon once it's active or clicked */
+    }
+    .material-icons {
+      font-size: 24px; /* Set the font size for Material Icons */
+    }
+    </style>
+</head>
+
+<body>
+     
+    <div id="cart"> 
+        <div class="cart-item" data-item-id="1">
+            <img class="item-image" src="img/gaming_laptop.jpg" alt="Gaming Laptop">
+            <span style="color: blue;">Gaming Laptop</span>
+            <button class="quantity-btn" onclick="adjustQuantity(1, 'decrease')">-</button>
+            <span class="quantity" id="quantity-1">1</span>
+            <button class="quantity-btn" onclick="adjustQuantity(1, 'increase')">+</button>
+            <i class="heart-icon" onclick="toggleLike(1)">&#x2764;</i>
+            <button onclick="removeItem(1)">Remove</button>
+            <span class="price" data-original-price="1500.00" id="price-1">$1500.00</span>
+        </div>
+
+        <div class="cart-item" data-item-id="2">
+            <img class="item-image" src="img/desktop_pc.jpg" alt="Desktop PC">
+            <span style="color: blue;">Desktop PC</span>
+            <button class="quantity-btn" onclick="adjustQuantity(2, 'decrease')">-</button>
+            <span class="quantity" id="quantity-2">1</span>
+            <button class="quantity-btn" onclick="adjustQuantity(2, 'increase')">+</button>
+            <i class="heart-icon" onclick="toggleLike(2)">&#x2764;</i>
+            <button onclick="removeItem(2)">Remove</button>
+            <span class="price" data-original-price="1200.00" id="price-2">$1200.00</span>
+        </div>
+
+        <div class="cart-item" data-item-id="3">
+            <img class="item-image" src="img/ultra_wide_monitor.jpg" alt="Ultra-Wide Monitor">
+            <span style="color: blue;">Ultra-Wide Monitor</span>
+            <button class="quantity-btn" onclick="adjustQuantity(3, 'decrease')">-</button>
+            <span class="quantity" id="quantity-3">1</span>
+            <button class="quantity-btn" onclick="adjustQuantity(3, 'increase')">+</button>
+            <i class="heart-icon" onclick="toggleLike(3)">&#x2764;</i>
+            <button onclick="removeItem(3)">Remove</button>
+            <span class="price" data-original-price="500.00" id="price-3">$500.00</span>
+        </div>
+
+        <div>Total: $<span id="total-price">3200.00</span></div>
+    </div>
+
+    <script>
+        function adjustQuantity(itemId, action) {// this is the adjustquantity function associated with the buttons that adjust the quantity of the item depending on itemid and action.
+            const quantityElement = document.getElementById(`quantity-${itemId}`);
+            let quantity = parseInt(quantityElement.textContent);
+            const priceElement = document.getElementById(`price-${itemId}`);
+            const originalPrice = parseFloat(priceElement.dataset.originalPrice);
+            let totalPriceElement = document.getElementById('total-price');
+            let total = parseFloat(totalPriceElement.textContent);
+
+            if (action === 'increase') {
+                quantity++;
+                total += originalPrice;
+            } else if (action === 'decrease' && quantity > 1) {
+                quantity--;
+                total -= originalPrice;
+            }
+
+            quantityElement.textContent = quantity;
+            priceElement.textContent = `$${(quantity * originalPrice).toFixed(2)}`;
+            totalPriceElement.textContent = total.toFixed(2);
+        }
+
+        function toggleLike(itemId) {// This function is associated with the heart icon, allowing the user to like or unlike an item.
+            const heartIcon = document.querySelector(`[data-item-id="${itemId}"] .heart-icon`);
+            heartIcon.classList.toggle('active');
+        }
+
+        function removeItem(itemId) {//This function is associated with the "Remove" button, allowing the user to remove an item from the cart.
+            const itemElement = document.querySelector(`[data-item-id="${itemId}"]`);
+            itemElement.remove();
+            updateTotalPrice();
+        }
+
+        function updateTotalPrice() {//This function is responsible for updating the total price of all items in the cart.
+                                    //It iterates through all cart items, calculates the total price, and updates the display.
+            let totalPrice = 0;
+            const cartItems = document.querySelectorAll('.cart-item');
+
+            cartItems.forEach(item => {
+                const quantity = parseInt(item.querySelector('.quantity').textContent);
+                const price = parseFloat(item.querySelector('.price').textContent.replace('$', ''));
+                totalPrice += quantity * price;
+            });
+
+            document.getElementById('total-price').textContent = totalPrice.toFixed(2);
+        }
+    </script>
+
+</body>
+
+</html>
